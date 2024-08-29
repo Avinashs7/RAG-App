@@ -38,11 +38,11 @@ package-lock.json
 
 ## Server(PORT: 8000)
 
-### Prepare your .env
+### Prepare your .env (refer .env.sample)
 
-Add cohere API key
-MongoDB URI
-PORT 
+- Add cohere API key
+- MongoDB URI
+- PORT 
 
 ## BUGs or comments
 
