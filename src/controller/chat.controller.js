@@ -71,4 +71,17 @@ const handleChat = asyncHandler(async (req, res) => {
   }
 })
 
-module.exports = { handleQuery, handleChat }
+const handleChatThread=asyncHandler(async(req,res)=>{
+  const {chatThreadId}=req.query;
+  const chatHistory = await Chat.find({chatThreadId:chatThreadId})
+  .sort({ createdAt: -1 })
+  .select("-createdAt -updatedAt");
+  if(!chatHistory){
+    throw new ApiError(404,"No chat Thread found");
+  }
+  return res
+  .status(200)
+  .send(new ApiResponse(200,data={chatHistory:chatHistory},"Chat history retrieved successfully"))
+});
+
+module.exports = { handleQuery, handleChat ,handleChatThread}
