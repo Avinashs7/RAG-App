@@ -1,6 +1,7 @@
 const { RecursiveCharacterTextSplitter } = require('langchain/text_splitter')
 
 const doc_splitter = {
+  //Split the document into chunks
   split_documents: async function (documents) {
     const splitter = new RecursiveCharacterTextSplitter({
       chunkSize: 1000,

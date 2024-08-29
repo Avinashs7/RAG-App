@@ -1,6 +1,6 @@
 const multer = require('multer')
-const fs=require('fs')
-const path=require("path")
+const fs = require('fs')
+const path = require('path')
 /**
  * Set storage engine for multer
  * And create the Destination folder for uploaded files

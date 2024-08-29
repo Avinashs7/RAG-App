@@ -1,43 +1,43 @@
 const { Cohere, CohereEmbeddings } = require('@langchain/cohere')
-const { ConversationalRetrievalQAChain } = require("langchain/chains")
+const { ConversationalRetrievalQAChain } = require('langchain/chains')
 const { FaissStore } = require('@langchain/community/vectorstores/faiss')
-const { BufferMemory } = require("langchain/memory")
-const path=require("path")
+const { BufferMemory } = require('langchain/memory')
+const path = require('path')
 
 const retrieval_qa_chain = {
-  ask_question: async function (document_id, question, chat_history = []) {
+  ask_question: async function (assetId, question, chat_history = []) {
     try {
-      const baseDir = path.join(process.cwd(), 'vector-db', 'faiss-store');
-      const directory = path.join(baseDir, document_id)      
+      const baseDir = path.join(process.cwd(), 'vector-db', 'faiss-store')
+      const directory = path.join(baseDir, assetId)
       const model = new Cohere({ apiKey: process.env.COHERE_API_KEY })
-      
+
       // Load the vector store from the directory
       const loadedVectorStore = await FaissStore.load(
         directory,
-        new CohereEmbeddings({ 
+        new CohereEmbeddings({
           apiKey: process.env.COHERE_API_KEY,
-          model: "embed-english-v3.0"
+          model: 'embed-english-v3.0'
         })
       )
-      
+
       // Create the conversational retrieval chain
       const chain = ConversationalRetrievalQAChain.fromLLM(
         model,
         loadedVectorStore.asRetriever(),
         {
           memory: new BufferMemory({
-            memoryKey: "chat_history",
+            memoryKey: 'chat_history',
             returnMessages: true,
-            inputKey: "question",
-            outputKey: "text",
+            inputKey: 'question',
+            outputKey: 'text'
           }),
-          returnSourceDocuments: true,
+          returnSourceDocuments: true
         }
       )
 
       // Invoke the chain with the question
       const response = await chain.call({
-        question: question,
+        question: question
       })
 
       // Update chat history
@@ -46,7 +46,6 @@ const retrieval_qa_chain = {
         { type: 'ai', content: response.text }
       )
 
-      // Prepare and return the answer
       const answer = {
         answer: response.text,
         chat_history: chat_history,
